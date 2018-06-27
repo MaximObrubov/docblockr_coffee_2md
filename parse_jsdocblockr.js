@@ -1,0 +1,109 @@
+// usage: node parse_js.doc
+
+
+const fs = require('fs'),
+    path = require('path'),
+    // filePath = path.join(__dirname, 'solver.js.coffee');
+    // filePath = "/var/www/content-components/components/high_school/solver/0.0.5-unstable/solver.js.coffee";
+    // filePath = "/var/www/content-components/components/high_school/solver/0.0.5-unstable/requests/solver_request_api.js.coffee";
+    filePath = "/var/www/content-components/components/high_school/solver/0.0.5-unstable/helpers/solver_parser_helper.js.coffee";
+    // filePath = "/var/www/content-components/components/high_school/quill_input/0.7.4/quill_input.js.coffee";
+
+fs.readFile(filePath, {encoding: 'utf-8'}, function(err, content){
+    if (!err) {
+        const docs = content.match(/###\*[^#]+###[^:]+/g)
+
+
+        console.log(docs)
+
+        const mdc = new MdConstructor(docs)
+    } else {
+        console.log(err);
+    }
+});
+
+class MdConstructor {
+  constructor(matched) {
+    this.matched = matched;
+    this.mdTable = this.getHead();
+    this.cunstructTable();
+  }
+
+  cunstructTable(){
+    for (let match of this.matched) {
+      this.constructFunctionObject(match);
+    }
+    console.log(this.mdTable);
+  }
+
+  getHead() {
+    let head = "| Method  | Description   | Parameters| Type | Parameter Description |\n";
+    head +=    "|:--------|:--------------|:----------|:-----|:------------|\n";
+    return head;
+  }
+
+  constructFunctionObject(text) {
+    let obj = {}
+    let counter = 1;
+    const paramReg = /@param\s*\{([^{}]+)}\s*([a-zA-Z._]+)([^@#]*)/g;
+
+
+    console.log(text);
+    console.log("\n===================\n");
+
+    obj.name = text.match(/@?\b.+$/)[0];
+    obj.description = text
+      .match(/^[^@]+/)[0]
+      .trim()
+      .replace(/(\*|#)/g, "")
+      .replace(/\s+/g, " ");
+    obj.parameters = [];
+
+    while(true) {
+      let m = paramReg.exec(text);
+      if (counter > 1000) {
+        throw("too much")
+      }
+      counter++;
+
+      if (m) {
+        const p = {}
+        p.name = m[2];
+        p.type = m[1];
+        p.description = m[3].replace(/\*/g, "").replace(/\s+/g, " ");
+        obj.parameters.push(p);
+      } else {
+        break;
+      }
+    }
+    this.mdTable += this.getMdTableLine(obj);
+  }
+
+
+  getMdTableLine(fo) {
+    let line = "",
+        prev_name = "",
+        prev_desc = "";
+    for (let parameter of fo.parameters) {
+      let type = parameter.type.replace("|", " or ");
+      let name = fo.name;
+      let desc = fo.description;
+
+      if (name === prev_name) {
+        name = "";
+      } else {
+        prev_name = name;
+      }
+      if (desc === prev_desc) {
+        desc = "";
+      } else {
+        prev_desc = desc;
+      }
+
+      line += `|${name}|${desc}|${parameter.name}|${type}|${parameter.description}\n`;
+    }
+    return line;
+  }
+
+
+}
