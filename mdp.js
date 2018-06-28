@@ -4,18 +4,29 @@
  */
 class MarkdownTableProvider {
   constructor(filePath) {
-    console.log("here we go");
     this.mdTable = this.getHead();
     this.fs = require('fs');
-    this.readFile(filePath);
+    this.filePath = filePath;
+    this.init();
   }
 
-  readFile(path) {
+  init() {
+    this.readFile(this.filePath, () => {
+      this.showTable();
+    });
+  }
+
+  showTable() {
+    console.log(this.mdTable);
+  }
+
+  readFile(path, cb) {
     let self = this;
     this.fs.readFile(path, {encoding: 'utf-8'}, function(err, content) {
         if (!err) {
             self.matched = content.match(/###\*[^#]+###[^:]+/g);
             self.cunstructTable();
+            if (typeof(cb) == "function") cb();
         } else {
             console.log(err);
         }
@@ -26,7 +37,6 @@ class MarkdownTableProvider {
     for (let match of this.matched) {
       this.constructFunctionObject(match);
     }
-    console.log(this.mdTable);
   }
 
   getHead() {
@@ -39,10 +49,6 @@ class MarkdownTableProvider {
     let obj = {}
     let counter = 1;
     const paramReg = /@param\s*\{([^{}]+)}\s*([a-zA-Z._]+)([^@#]*)/g;
-
-
-    console.log(text);
-    console.log("\n===================\n");
 
     obj.name = text.match(/@?\b.+$/)[0];
     obj.description = text
