@@ -24,8 +24,8 @@ class MarkdownTableProvider {
     let self = this;
     this.fs.readFile(path, {encoding: 'utf-8'}, function(err, content) {
         if (!err) {
-            self.matched = content.match(/###\*[^#]+###[^:]+/g);
-            self.cunstructTable();
+            const matched = content.match(/###\*[\s\S]*?###[^:]+/g);
+            self.cunstructTable(matched);
             if (typeof(cb) == "function") cb();
         } else {
             console.log(err);
@@ -33,9 +33,13 @@ class MarkdownTableProvider {
     });
   }
 
-  cunstructTable(){
-    for (let match of this.matched) {
-      this.constructFunctionObject(match);
+  cunstructTable(matched){
+    try {
+      for (let match of matched) {
+        this.constructFunctionObject(match);
+      }
+    } catch (e) {
+      throw `Something goes wrong: ${e}`;
     }
   }
 
@@ -46,9 +50,9 @@ class MarkdownTableProvider {
   }
 
   constructFunctionObject(text) {
-    let obj = {}
-    let counter = 1;
-    const paramReg = /@param\s*\{([^{}]+)}\s*([a-zA-Z._]+)([^@#]*)/g;
+    let obj = {},
+        counter = 1;
+    const paramReg = /@param\s*\{([^{}]+)\}\s*([a-zA-Z._]+)([^@#]*)/g;
 
     obj.name = text.match(/@?\b.+$/)[0];
     obj.description = text
@@ -84,9 +88,9 @@ class MarkdownTableProvider {
         prev_name = "",
         prev_desc = "";
     for (let parameter of fo.parameters) {
-      let type = parameter.type.replace("|", " or ");
-      let name = fo.name;
-      let desc = fo.description;
+      let type = parameter.type.replace("|", " or "),
+          name = fo.name,
+          desc = fo.description;
 
       if (name === prev_name) {
         name = "";
