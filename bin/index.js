@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 'use strict';
 
-import MarkdownTableProvider from 'mdp';
-
 const program = require('commander'),
+      MarkdownTableProvider = require('../mdp.js'),
       exec = require('child_process').exec;
 
 let getTable = (file, options) => {
+
+  console.log(file, options);
+
+
   const tableProvider = new MarkdownTableProvider(file);
 
   let execCallback = (error, stdout, stderr) => {

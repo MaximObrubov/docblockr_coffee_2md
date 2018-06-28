@@ -1,9 +1,14 @@
-
+/**
+ * Класс, предоставляющий возможность парсить jsdoc в markdown таблицу
+ */
 class MarkdownTableProvider {
   constructor(filePath) {
+    console.log("here we go");
+    
     this.mdTable = this.getHead();
     this.fs = require('fs');
     this.readFile(filePath);
+
   }
 
   readFile(path) {
@@ -94,4 +99,4 @@ class MarkdownTableProvider {
   }
 }
 
-module.exports.MarkdownTableProvider = MarkdownTableProvider;
+module.exports = MarkdownTableProvider;
