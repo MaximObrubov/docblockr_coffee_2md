@@ -3,7 +3,7 @@
 
 const program = require('commander'),
       exec = require('child_process').exec,
-      parser = require('parse_jsdocblockr');
+      parser = require('MarkdownTableProvider');
 
 let getTable = (file, options) => {
 
