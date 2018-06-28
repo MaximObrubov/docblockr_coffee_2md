@@ -1,32 +1,20 @@
-// usage: node parse_js.doc
 
-
-const fs = require('fs'),
-    path = require('path'),
-    // filePath = path.join(__dirname, 'solver.js.coffee');
-    // filePath = "/var/www/content-components/components/high_school/solver/0.0.5-unstable/solver.js.coffee";
-    // filePath = "/var/www/content-components/components/high_school/solver/0.0.5-unstable/requests/solver_request_api.js.coffee";
-    filePath = "/var/www/content-components/components/high_school/solver/0.0.5-unstable/helpers/solver_parser_helper.js.coffee";
-    // filePath = "/var/www/content-components/components/high_school/quill_input/0.7.4/quill_input.js.coffee";
-
-fs.readFile(filePath, {encoding: 'utf-8'}, function(err, content){
-    if (!err) {
-        const docs = content.match(/###\*[^#]+###[^:]+/g)
-
-
-        console.log(docs)
-
-        const mdc = new MdConstructor(docs)
-    } else {
-        console.log(err);
-    }
-});
-
-class MdConstructor {
-  constructor(matched) {
-    this.matched = matched;
+class MarkdownTableProvider {
+  constructor(filePath) {
     this.mdTable = this.getHead();
-    this.cunstructTable();
+    this.fs = require('fs');
+    this.readFile(filePath);
+  }
+
+  readFile(path) {
+    fs.readFile(path, {encoding: 'utf-8'}, function(err, content){
+        if (!err) {
+            this.matched = content.match(/###\*[^#]+###[^:]+/g);
+            cunstructTable();
+        } else {
+            console.log(err);
+        }
+    });
   }
 
   cunstructTable(){
@@ -76,7 +64,7 @@ class MdConstructor {
         break;
       }
     }
-    this.mdTable += this.getMdTableLine(obj);
+    this.mdTable += this.gMarkdownTableProvideretMdTableLine(obj);
   }
 
 
@@ -104,6 +92,6 @@ class MdConstructor {
     }
     return line;
   }
-
-
 }
+
+module.exports.MarkdownTableProvider = MarkdownTableProvider;\
