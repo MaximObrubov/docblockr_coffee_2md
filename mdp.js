@@ -1,21 +1,21 @@
+'use strict';
 /**
  * Класс, предоставляющий возможность парсить jsdoc в markdown таблицу
  */
 class MarkdownTableProvider {
   constructor(filePath) {
     console.log("here we go");
-    
     this.mdTable = this.getHead();
     this.fs = require('fs');
     this.readFile(filePath);
-
   }
 
   readFile(path) {
-    fs.readFile(path, {encoding: 'utf-8'}, function(err, content){
+    let self = this;
+    this.fs.readFile(path, {encoding: 'utf-8'}, function(err, content) {
         if (!err) {
-            this.matched = content.match(/###\*[^#]+###[^:]+/g);
-            cunstructTable();
+            self.matched = content.match(/###\*[^#]+###[^:]+/g);
+            self.cunstructTable();
         } else {
             console.log(err);
         }
@@ -69,7 +69,7 @@ class MarkdownTableProvider {
         break;
       }
     }
-    this.mdTable += this.gMarkdownTableProvideretMdTableLine(obj);
+    this.mdTable += this.getMdTableLine(obj);
   }
 
 
