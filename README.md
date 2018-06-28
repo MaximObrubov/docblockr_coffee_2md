@@ -16,5 +16,5 @@ v8.11.3
 
 #### Использование:
 ```bash
-node parse_jsdocblockr.js
+ jsd2md solver.js.coffee 
 ```
