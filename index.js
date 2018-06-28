@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
+import MarkdownTableProvider from 'mdp';
+
 const program = require('commander'),
-      exec = require('child_process').exec,
-      parser = require('MarkdownTableProvider');
+      exec = require('child_process').exec;
 
 let getTable = (file, options) => {
-
-
-
+  const tableProvider = new MarkdownTableProvider(file);
 
   let execCallback = (error, stdout, stderr) => {
     if (error) console.log("exec error: " + error);
-    if (stdout) console.log("Result: \n" + stdout + "\n\n" + table);
+    if (stdout) console.log("Result: \n" + stdout + "\n\n" + tableProvider);
     if (stderr) console.log("shell error: " + stderr);
   };
   exec(fullCommand, execCallback);
