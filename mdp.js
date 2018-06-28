@@ -94,4 +94,4 @@ class MarkdownTableProvider {
   }
 }
 
-module.exports.MarkdownTableProvider = MarkdownTableProvider;\
+module.exports.MarkdownTableProvider = MarkdownTableProvider;
