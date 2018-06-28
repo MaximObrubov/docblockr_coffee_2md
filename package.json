@@ -1,0 +1,30 @@
+{
+  "name": "docblockr_coffee_2md",
+  "version": "0.0.1",
+  "description": "parse .coffee dockblockr documentation to .md table",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaximObrubov/docblockr_coffee_2md.git"
+  },
+  "keywords": [
+    "jsdoc",
+    "coffee",
+    "script",
+    "parse",
+    "to",
+    "markdown"
+  ],
+  "author": "Maxim Obrubov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MaximObrubov/docblockr_coffee_2md/issues"
+  },
+  "homepage": "https://github.com/MaximObrubov/docblockr_coffee_2md#readme",
+  "dependencies": {
+    "commander": "^2.15.1"
+  }
+}
