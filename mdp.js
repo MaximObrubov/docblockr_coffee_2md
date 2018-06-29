@@ -1,19 +1,29 @@
 'use strict';
 /**
  * Класс, предоставляющий возможность парсить jsdoc в markdown таблицу
+ * @param {String} filePath - путь к файлу для парсинга
  */
 class MarkdownTableProvider {
   constructor(filePath) {
     this.mdTable = this.getHead();
     this.fs = require('fs');
     this.filePath = filePath;
+    this.blockRegexes = {
+      coffee: /###\*[\s\S]*?###[^:]+/g,
+      js:     /\/\*\*[\s\S]*?\*\/[^:]+/g
+    }
     this.init();
   }
 
   init() {
+    this.blockRegex = this.blockRegexes[this.getFileExtension(this.filePath)];
     this.readFile(this.filePath, () => {
       this.showTable();
     });
+  }
+
+  getFileExtension(file) {
+    return file.match(/\.([a-zA-Z]+)$/)[1];
   }
 
   showTable() {
@@ -24,7 +34,7 @@ class MarkdownTableProvider {
     let self = this;
     this.fs.readFile(path, {encoding: 'utf-8'}, function(err, content) {
         if (!err) {
-            const matched = content.match(/###\*[\s\S]*?###[^:]+/g);
+            const matched = content.match(self.blockRegex);
             self.cunstructTable(matched);
             if (typeof(cb) == "function") cb();
         } else {
